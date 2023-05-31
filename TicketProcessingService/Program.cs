@@ -3,14 +3,13 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
-Console.WriteLine("Hello, World!");
-
 ConnectionFactory factory = new ConnectionFactory();
 factory.Uri = new Uri("amqp://guest:guest@localhost:5672");
 
 var conn = factory.CreateConnection();
 using var channel = conn.CreateModel();
-channel.QueueDeclare("bookings", durable: true, exclusive: true);
+
+channel.QueueDeclare("bookings", false, false, false, null);
 
 var consumer = new EventingBasicConsumer(channel);
 
@@ -27,3 +26,5 @@ consumer.Received += (model, eventArgs) =>
 channel.BasicConsume("bookings", true, consumer);
 
 Console.ReadKey();
+Console.WriteLine("Hello, World!");
+
